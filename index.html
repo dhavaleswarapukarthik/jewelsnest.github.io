@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Immutation Jewellery - Online Store</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #111111;
+      --bg-light: #ffffff;
+      --accent: #d4af37; /* gold */
+      --accent-soft: #f3e6be;
+      --text-main: #222222;
+      --text-muted: #777777;
+      --border-soft: #eeeeee;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background: #fafafa;
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* Layout Helpers */
+    .container {
+      width: min(1200px, 100% - 2rem);
+      margin: 0 auto;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.7rem 1.5rem;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .btn-outline {
+      border: 1px solid var(--accent);
+      background: transparent;
+      color: var(--accent);
+    }
+
+    .btn-outline:hover {
+      background: var(--accent);
+      color: #111;
+    }
+
+    /* Header / Navbar */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(17, 17, 17, 0.96);
+      backdrop-filter: blur(10px);
+      color: white;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.7rem 0;
+    }
+
+    .logo {
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .logo-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      position: relative;
+    }
+
+    .logo-icon::before {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border-radius: inherit;
+      border: 1px solid var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .nav-links a {
+      color: #f7f7f7;
+      opacity: 0.85;
+    }
+
+    .nav-links a:hover {
+      opacity: 1;
+    }
+
+    .cart-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      color: white;
+    }
+
+    .cart-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      position: relative;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: var(--accent);
+      color: #000;
+      border-radius: 999px;
+      font-size: 0.65rem;
+      padding: 0 5px;
+    }
+
+    /* Hero */
+    .hero {
+      background: radial-gradient(circle at top left, #222 0, #050505 45%, #000 100%);
+      color: white;
+      padding: 3.5rem 0 3rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 0.7rem;
+      color: var(--accent-soft);
+      margin-bottom: 0.8rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 4vw, 2.7rem);
+      line-height: 1.2;
+      margin-bottom: 0.9rem;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      font-size: 0.95rem;
+      max-width: 30rem;
+      color: #dddddd;
+      margin-bottom: 1.4rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 0.9rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.6rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      font-size: 0.8rem;
+      color: #bbbbbb;
+    }
+
+    .hero-meta strong {
+      display: block;
+      font-size: 0.9rem;
+      color: #f5f5f5;
+    }
+
+    .hero-card {
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+      border-radius: 20px;
+      padding: 1.6rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
+    }
+
+    .hero-tag {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--accent-soft);
+      margin-bottom: 0.9rem;
+    }
+
+    .hero-main-piece {
+      font-size: 1rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .price-tag {
+      font-size: 0.95rem;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .hero-pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero-pill {
+      font-size: 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 0.2rem 0.8rem;
+      color: #ddd;
+    }
+
+    .hero-note {
+      font-size: 0.75rem;
+      color: #bbbbbb;
+      margin-top: 0.6rem;
+    }
+
+    /* Sections */
+    section {
+      padding: 3rem 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .section-header h2 {
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section-header p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 28rem;
+      margin: 0.4rem auto 0;
+    }
+
+    /* Categories */
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.2rem;
+    }
+
+    .category-card {
+      border-radius: 18px;
+      background: white;
+      border: 1px solid var(--border-soft);
+      padding: 1.3rem 1.1rem;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 160px;
+    }
+
+    .category-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      border-color: #e3d08a;
+    }
+
+    .category-name {
+      font-weight: 500;
+      margin-bottom: 0.3rem;
+    }
+
+    .category-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .category-tag {
+      font-size: 0.75rem;
+      color: var(--accent);
+    }
+
+    /* Products */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.4rem;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 18px;
+      border: 1px solid var(--border-soft);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.15s ease, transform 0.15s ease, border 0.15s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.1);
+      border-color: #e3d08a;
+    }
+
+    .product-image {
+      background: radial-gradient(circle at top, #fdf5dc 0, #f7f0dd 35%, #f1e6cd 100%);
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: #8a6c2f;
+      text-align: center;
+      padding: 0.5rem;
+    }
+
+    .product-body {
+      padding: 0.9rem 1rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      flex: 1;
+    }
+
+    .product-name {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .product-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .product-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .product-price {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #b4881c;
+    }
+
+    .product-price span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-decoration: line-through;
+      margin-left: 0.4rem;
+      font-weight: 400;
+    }
+
+    .product-badge {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      background: #fff7da;
+      color: #8a6c2f;
+    }
+
+    .product-add-btn {
+      font-size: 0.8rem;
+      padding: 0.35rem 0.9rem;
+    }
+
+    /* About + Contact */
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 2rem;
+      align-items: flex-start;
+    }
+
+    .about-block h3,
+    .contact-block h3 {
+      font-size: 1rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .about-block p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .about-points {
+      margin-top: 0.8rem;
+      font-size: 0.85rem;
+      list-style: none;
+    }
+
+    .about-points li::before {
+      content: "✦";
+      margin-right: 0.5rem;
+      color: #b4881c;
+    }
+
+    .contact-details {
+      font-size: 0.9rem;
+    }
+
+    .contact-details p {
+      margin-bottom: 0.45rem;
+    }
+
+    .contact-details a {
+      color: #b4881c;
+    }
+
+    .contact-form {
+      margin-top: 0.9rem;
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 0.6rem 0.7rem;
+      border-radius: 10px;
+      border: 1px solid #dddddd;
+      font-size: 0.9rem;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 40px;
+    }
+
+    .contact-form textarea {
+      min-height: 90px;
+    }
+
+    /* Cart Drawer */
+    .cart-drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      display: none;
+      z-index: 1200;
+    }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(360px, 100%);
+      height: 100%;
+      background: #ffffff;
+      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.2);
+      transform: translateX(100%);
+      transition: transform 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      z-index: 1300;
+    }
+
+    .cart-header {
+      padding: 1rem 1.2rem;
+      border-bottom: 1px solid #eeeeee;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .cart-header h3 {
+      font-size: 1rem;
+    }
+
+    .cart-close-btn {
+      border: none;
+      background: transparent;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .cart-body {
+      padding: 1rem 1.2rem;
+      flex: 1;
+      overflow-y: auto;
+      font-size: 0.9rem;
+    }
+
+    .empty-cart {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.6rem;
+      margin-bottom: 0.7rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .cart-item-main {
+      flex: 1;
+    }
+
+    .cart-item-name {
+      font-size: 0.9rem;
+      margin-bottom: 0.1rem;
+    }
+
+    .cart-item-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .cart-item-qty {
+      font-size: 0.78rem;
+      margin-top: 0.2rem;
+    }
+
+    .cart-item-price {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #b4881c;
+      white-space: nowrap;
+    }
+
+    .cart-footer {
+      border-top: 1px solid #eeeeee;
+      padding: 1rem 1.2rem;
+    }
+
+    .cart-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .cart-total {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .cart-actions {
+      margin-top: 0.8rem;
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .cart-actions .btn {
+      flex: 1;
+      text-align: center;
+    }
+
+    /* Footer */
+    footer {
+      padding: 1.4rem 0;
+      font-size: 0.8rem;
+      color: #999999;
+      border-top: 1px solid #eeeeee;
+      text-align: center;
+      background: #ffffff;
+      margin-top: 1.5rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .hero-grid,
+      .two-col {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero {
+        padding-top: 2.5rem;
+      }
+    }
+
+    @media (max-width: 800px) {
+      .products-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .categories-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .products-grid,
+      .categories-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero-meta {
+        flex-direction: column;
+      }
+
+      .nav {
+        gap: 0.5rem;
+      }
+
+      .hero-card {
+        margin-top: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CART DRAWER -->
+  <div class="cart-drawer-backdrop" id="cart-backdrop"></div>
+  <aside class="cart-drawer" id="cart-drawer">
+    <div class="cart-header">
+      <h3>Your Cart</h3>
+      <button class="cart-close-btn" id="close-cart">&times;</button>
+    </div>
+    <div class="cart-body">
+      <div id="cart-items"></div>
+      <p class="empty-cart" id="empty-cart">Your cart is empty. Start adding some sparkle ✨</p>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-row">
+        <span>Subtotal</span>
+        <span id="cart-subtotal">₹0</span>
+      </div>
+      <div class="cart-row cart-total">
+        <span>Total</span>
+        <span id="cart-total">₹0</span>
+      </div>
+      <div class="cart-actions">
+        <button class="btn btn-outline" id="clear-cart">Clear</button>
+        <button class="btn btn-primary" id="checkout-btn">Checkout</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container">
+      <nav class="nav">
+        <a href="#top" class="logo">
+          <span class="logo-icon"></span>
+          <span>Immutation Jewellery</span>
+        </a>
+
+        <div class="nav-links">
+          <a href="#shop">Shop</a>
+          <a href="#categories">Categories</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </div>
+
+        <button class="cart-btn" id="open-cart">
+          <div class="cart-icon">
+            🛒
+            <span class="cart-count" id="cart-count">0</span>
+          </div>
+          <span>Cart</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Immutation Jewellery • Online</div>
+          <h1>Premium <span>Imitation Jewellery</span> for Everyday Luxury</h1>
+          <p class="hero-subtitle">
+            Discover handpicked necklaces, earrings, bangles and rings that look like fine jewellery – without the heavy price tag.
+          </p>
+          <div class="hero-actions">
+            <a href="#shop" class="btn btn-primary">Shop New Arrivals</a>
+            <a href="#categories" class="btn btn-outline">Browse by Category</a>
+          </div>
+          <div class="hero-meta">
+            <div>
+              <strong>Free shipping</strong>
+              On orders over ₹999
+            </div>
+            <div>
+              <strong>Skin-friendly</strong>
+              Lead & nickel safe
+            </div>
+            <div>
+              <strong>COD available</strong>
+              In selected locations
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-tag">Featured Set</div>
+          <div class="hero-main-piece">Royal Kundan Necklace Set</div>
+          <div class="price-tag">₹1,899 <span style="font-size:0.8rem; color:#aaaaaa; margin-left:4px;">₹2,499</span></div>
+          <div class="hero-pill-row">
+            <span class="hero-pill">Anti-tarnish coating</span>
+            <span class="hero-pill">Includes earrings</span>
+            <span class="hero-pill">Wedding favourite</span>
+          </div>
+          <p class="hero-note">
+            Each Immutation Jewellery piece is carefully selected so you can dress like royalty, every single day.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section id="categories">
+      <div class="container">
+        <div class="section-header">
+          <h2>Categories</h2>
+          <p>Curated imitation jewellery for every mood – mix, match and layer your favourites.</p>
+        </div>
+        <div class="categories-grid">
+          <div class="category-card">
+            <div>
+              <div class="category-name">Necklaces</div>
+              <div class="category-desc">Minimal to bridal, elevate any outfit instantly.</div>
+            </div>
+            <div class="category-tag">Starting ₹699</div>
+          </div>
+          <div class="category-card">
+            <div>
+              <div class="category-name">Earrings</div>
+              <div class="category-desc">Studs, jhumkas & chandbalis for every occasion.</div>
+            </div>
+            <div class="category-tag">Starting ₹399</div>
+          </div>
+          <div class="category-card">
+            <div>
+              <div class="category-name">Bangles & Bracelets</div>
+              <div class="category-desc">Stackable designs to add instant charm.</div>
+            </div>
+            <div class="category-tag">Starting ₹499</div>
+          </div>
+          <div class="category-card">
+            <div>
+              <div class="category-name">Rings</div>
+              <div class="category-desc">Statement and everyday rings that shine.</div>
+            </div>
+            <div class="category-tag">Starting ₹299</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section id="shop">
+      <div class="container">
+        <div class="section-header">
+          <h2>New Arrivals</h2>
+          <p>Add these bestsellers from Immutation Jewellery to your collection.</p>
+        </div>
+
+        <div class="products-grid" id="products-grid">
+          <!-- SAMPLE PRODUCT CARD TEMPLATE:
+          <article class="product-card" data-id="1" data-name="..." data-price="..." data-category="...">
+          -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT + CONTACT -->
+    <section id="about">
+      <div class="container two-col">
+        <div class="about-block">
+          <h3>About Immutation Jewellery</h3>
+          <p>
+            Immutation Jewellery brings you premium imitation designs inspired by fine jewellery –
+            perfect for weddings, festivals and everyday glam. We focus on comfort, shine and durability
+            so you can wear your favourite pieces again and again.
+          </p>
+          <ul class="about-points">
+            <li>Handpicked designs from trusted artisans</li>
+            <li>Skin-friendly, lead & nickel safe pieces</li>
+            <li>Thoughtful packaging – perfect for gifting</li>
+            <li>Dedicated customer support for every order</li>
+          </ul>
+        </div>
+
+        <div class="contact-block" id="contact">
+          <h3>Contact & Support</h3>
+          <div class="contact-details">
+            <p><strong>Email:</strong> <a href="mailto:support@immutationjewellery.com">support@immutationjewellery.com</a></p>
+            <p><strong>WhatsApp:</strong> +91-98765-43210</p>
+            <p><strong>Address:</strong> Immutation Jewellery Studio, Main Market, Your City</p>
+          </div>
+
+          <form class="contact-form" onsubmit="event.preventDefault(); alert('Thank you! We will get back to you shortly.');">
+            <input type="text" placeholder="Your Name" required />
+            <input type="email" placeholder="Email Address" required />
+            <textarea placeholder="Your message or custom order request" required></textarea>
+            <button class="btn btn-primary" type="submit">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    &copy; <span id="year"></span> Immutation Jewellery. All rights reserved.
+  </footer>
+
+  <script>
+    // --- PRODUCT DATA ---
+    const products = [
+      {
+        id: 1,
+        name: "Pearl Glow Choker Set",
+        price: 1299,
+        mrp: 1699,
+        category: "Necklace",
+        badge: "Bestseller",
+        meta: "Comes with matching earrings."
+      },
+      {
+        id: 2,
+        name: "Crystal Drop Jhumkas",
+        price: 799,
+        mrp: 999,
+        category: "Earrings",
+        badge: "New",
+        meta: "Perfect for festive looks."
+      },
+      {
+        id: 3,
+        name: "Royal Polki Bangle Pair",
+        price: 1499,
+        mrp: 1899,
+        category: "Bangles",
+        badge: "Limited",
+        meta: "Adjustable, comfortable fit."
+      },
+      {
+        id: 4,
+        name: "Twisted Charm Bracelet",
+        price: 599,
+        mrp: 799,
+        category: "Bracelet",
+        badge: "Everyday",
+        meta: "Minimal, daily wear."
+      },
+      {
+        id: 5,
+        name: "Emerald Statement Ring",
+        price: 499,
+        mrp: 699,
+        category: "Ring",
+        badge: "Trending",
+        meta: "Adjustable ring size."
+      },
+      {
+        id: 6,
+        name: "Kundan Bridal Necklace",
+        price: 2399,
+        mrp: 2899,
+        category: "Necklace",
+        badge: "Bridal Pick",
+        meta: "Includes earrings + maang tikka."
+      },
+      {
+        id: 7,
+        name: "Vintage Hoop Earrings",
+        price: 649,
+        mrp: 899,
+        category: "Earrings",
+        badge: "Hot",
+        meta: "Lightweight, everyday hoops."
+      },
+      {
+        id: 8,
+        name: "Rose Gold Stackable Rings",
+        price: 899,
+        mrp: 1199,
+        category: "Ring",
+        badge: "Bundle",
+        meta: "Set of 4 stackable rings."
+      }
+    ];
+
+    const productsGrid = document.getElementById("products-grid");
+
+    function formatCurrency(amount) {
+      return "₹" + amount.toLocaleString("en-IN");
+    }
+
+    function createProductCard(product) {
+      const card = document.createElement("article");
+      card.className = "product-card";
+      card.dataset.id = product.id;
+      card.dataset.name = product.name;
+      card.dataset.price = product.price;
+      card.dataset.category = product.category;
+
+      card.innerHTML = `
+        <div class="product-image">
+          ${product.category} Collection
+        </div>
+        <div class="product-body">
+          <div class="product-name">${product.name}</div>
+          <div class="product-meta">${product.meta}</div>
+          <div class="product-bottom">
+            <div>
+              <div class="product-price">
+                ${formatCurrency(product.price)}
+                <span>${formatCurrency(product.mrp)}</span>
+              </div>
+              <div class="product-badge">${product.badge}</div>
+            </div>
+            <button class="btn btn-primary product-add-btn">Add to Cart</button>
+          </div>
+        </div>
+      `;
+
+      card.querySelector(".product-add-btn").addEventListener("click", () => {
+        addToCart(product);
+      });
+
+      return card;
+    }
+
+    products.forEach((p) => {
+      productsGrid.appendChild(createProductCard(p));
+    });
+
+    // --- CART LOGIC ---
+    let cart = [];
+
+    const cartCountEl = document.getElementById("cart-count");
+    const cartItemsEl = document.getElementById("cart-items");
+    const emptyCartEl = document.getElementById("empty-cart");
+    const cartSubtotalEl = document.getElementById("cart-subtotal");
+    const cartTotalEl = document.getElementById("cart-total");
+
+    function updateCartUI() {
+      cartItemsEl.innerHTML = "";
+
+      if (!cart.length) {
+        emptyCartEl.style.display = "block";
+      } else {
+        emptyCartEl.style.display = "none";
+        cart.forEach((item) => {
+          const row = document.createElement("div");
+          row.className = "cart-item";
+          row.innerHTML = `
+            <div class="cart-item-main">
+              <div class="cart-item-name">${item.name}</div>
+              <div class="cart-item-meta">${item.category}</div>
+              <div class="cart-item-qty">Qty: ${item.qty}</div>
+            </div>
+            <div class="cart-item-price">${formatCurrency(item.price * item.qty)}</div>
+          `;
+          cartItemsEl.appendChild(row);
+        });
+      }
+
+      const itemCount = cart.reduce((sum, item) => sum + item.qty, 0);
+      const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+      cartCountEl.textContent = itemCount;
+      cartSubtotalEl.textContent = formatCurrency(subtotal);
+      cartTotalEl.textContent = formatCurrency(subtotal); // you can add shipping, etc.
+    }
+
+    function addToCart(product) {
+      const existing = cart.find((item) => item.id === product.id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          category: product.category,
+          qty: 1
+        });
+      }
+      updateCartUI();
+      openCart();
+    }
+
+    function clearCart() {
+      cart = [];
+      updateCartUI();
+    }
+
+    // --- CART DRAWER OPEN/CLOSE ---
+    const cartDrawer = document.getElementById("cart-drawer");
+    const cartBackdrop = document.getElementById("cart-backdrop");
+
+    function openCart() {
+      cartDrawer.style.transform = "translateX(0)";
+      cartBackdrop.style.display = "block";
+    }
+
+    function closeCart() {
+      cartDrawer.style.transform = "translateX(100%)";
+      cartBackdrop.style.display = "none";
+    }
+
+    document.getElementById("open-cart").addEventListener("click", openCart);
+    document.getElementById("close-cart").addEventListener("click", closeCart);
+    cartBackdrop.addEventListener("click", closeCart);
+
+    document.getElementById("clear-cart").addEventListener("click", () => {
+      if (cart.length && confirm("Clear all items from cart?")) {
+        clearCart();
+      }
+    });
+
+    document.getElementById("checkout-btn").addEventListener("click", () => {
+      if (!cart.length) {
+        alert("Your cart is empty.");
+        return;
+      }
+      alert("This is a demo checkout. In a real site you would integrate payment gateway here.");
+    });
+
+    // Set dynamic year in footer
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
